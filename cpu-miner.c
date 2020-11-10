@@ -590,6 +590,7 @@ static bool gbt_work_decode(const json_t *val, struct work *work)
 	char *txs_end = work->txs + strlen(work->txs);
 
 	/* generate merkle root */
+	clock_t merkle_start = clock();
 	merkle_tree = malloc(32 * ((1 + tx_count + 1) & ~1));
 	size_t tx_buf_size = 32 * 1024;
 	tx = malloc(tx_buf_size);
@@ -624,6 +625,11 @@ static bool gbt_work_decode(const json_t *val, struct work *work)
 		}
 	}
 	free(tx); tx = NULL;
+	clock_t merkle_end = clock();
+	double cpu_time_used = ((double) (merkle_end - merkle_start)) / CLOCKS_PER_SEC;
+	double merkle_tps = tx_count / cpu_time_used;
+	applog(LOG_INFO, "Merkle tree processed %.1f TX/s", merkle_tps);
+
 	n = 1 + tx_count;
 	while (n > 1) {
 		if (n % 2) {

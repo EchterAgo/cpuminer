@@ -214,6 +214,8 @@ static size_t all_data_cb(const void *ptr, size_t size, size_t nmemb,
 		if (reqalloc > newalloc)
 			newalloc = reqalloc;
 
+		applog(LOG_DEBUG, "Realloc from %d bytes to %d bytes", db->allocated, newalloc);
+
 		newmem = realloc(db->buf, newalloc);
 		if (!newmem)
 			return 0;

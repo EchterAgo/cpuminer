@@ -92,6 +92,14 @@ then
       AC_MSG_RESULT(no)
       AC_MSG_WARN([The assembler does not support the AVX2 instruction set.])
     )
+    AC_MSG_CHECKING(whether we can compile SHA-NI code)
+    AC_COMPILE_IFELSE([AC_LANG_PROGRAM(,[asm ("sha256rnds2 %xmm0, %xmm1");])],
+      AC_DEFINE(USE_SHANI, 1, [Define to 1 if SHA-NI assembly is available.])
+      AC_MSG_RESULT(yes)
+    ,
+      AC_MSG_RESULT(no)
+      AC_MSG_WARN([The assembler does not support the SHA-NI instruction set.])
+    )
   ,
     AC_MSG_RESULT(no)
     AC_MSG_WARN([The assembler does not support the AVX instruction set.])
